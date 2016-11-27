@@ -1,0 +1,575 @@
+http://nqdeng.github.io/7-days-nodejs/#7.1
+
+#Nodejs是什么?
+- 简单的说 Node.js 就是运行在服务端的 JavaScript。
+- Node.js 是一个基于Chrome JavaScript Runtime 建立的一个平台。
+- Node.js是一个事件驱动I/O服务端JavaScript环境，基于Google的V8引擎，V8引擎执行Javascript的速度非常快，性能非常好。
+
+#脚本模式
+node xxx.js
+
+#交互模式
+$ node
+> console.log('Hello World!');
+Hello World!
+
+#NPM 使用介绍
+- NPM是随同NodeJS一起安装的包管理工具，能解决NodeJS代码部署上的很多问题，常见的使用场景有以下几种：
+- 允许用户从NPM服务器下载别人编写的第三方包到本地使用。
+- 允许用户从NPM服务器下载并安装别人编写的命令行程序到本地使用。
+- 允许用户将自己编写的包或命令行程序上传到NPM服务器供别人使用。
+- 由于新版的nodejs已经集成了npm，所以之前npm也一并安装好了。
+
+- 查看版本：npm -v 
+- 自己升级：npm install npm -g
+
+#npm安装模块
+- 安装模块：npm install <Module Name>
+- 安装好之后，express 包就放在了工程目录下的 node_modules  目录中，因此在代码中只需要通过 require('express') 的方式就好，无需指定第三方包路径。
+
+- npm install express      # 本地安装
+1. 将安装包放在 ./node_modules 下（运行 npm 命令时所在的目录），如果没有 node_modules 目录，会在当前执行 npm 命令的目录下生成 node_modules 目录。
+2. 可以通过 require() 来引入本地安装的包。
+
+- npm install express -g   # 全局安装
+1. 将安装包放在 /usr/local 下或者你 node 的安装目录。
+2. 可以直接在命令行里使用。
+
+- 查看所有全局安装的模块：$ npm ls -g
+- 如果你希望具备两者功能，则需要在两个地方安装它或使用 npm link。
+
+- 如果出现以下错误：npm err! Error: connect ECONNREFUSED 127.0.0.1:8087 
+解决办法为：$ npm config set proxy null
+
+# package.json
+- package.json 位于模块的目录下，用于定义包的属性。
+- Package.json 属性说明
+- name - 包名。
+- version - 包的版本号。
+- description - 包的描述。
+- homepage - 包的官网 url 。
+- author - 包的作者姓名。
+- contributors - 包的其他贡献者姓名。
+- dependencies - 依赖包列表。如果依赖包没有安装，npm 会自动将依赖包安装在 node_module 目录下。
+- repository - 包代码存放的地方的类型，可以是 git 或 svn，git 可在 Github 上。
+- main - main 字段是一个模块ID，它是一个指向你程序的主要项目。就是说，如果你包的名字叫 express，然后用户安装它，然后require("express")。
+- keywords - 关键字
+
+- 卸载 Node.js 模块:$ npm uninstall express
+- 查看包：$ npm ls
+- 更新模块: $ npm update express
+- 搜索模块: $ npm search express
+- 创建模块: $ npm init
+
+#版本号
+- 使用NPM下载和发布代码时都会接触到版本号。NPM使用语义版本号来管理代码，这里简单介绍一下。
+- 语义版本号分为X.Y.Z三位，分别代表主版本号、次版本号和补丁版本号。当代码变更时，版本号按以下原则更新。
+- 如果只是修复bug，需要更新Z位;如果是新增了功能，但是向下兼容，需要更新Y位;如果有大变动，向下不兼容，需要更新X位。
+- 版本号有了这个保证后，在申明第三方包依赖时，除了可依赖于一个固定版本号外，还可依赖于某个范围的版本号。例如"argv": "0.0.x"表示依赖于0.0.x系列的最新版argv。
+
+#NPM提供了很多命令，例如install和publish，使用npm help可查看所有命令。
+- 使用npm help <command>可查看某条命令的详细帮助，例如npm help install。
+- 在package.json所在目录下使用npm install . -g可先在本地安装当前命令行程序，可用于发布前的本地测试。
+- 使用npm update <package>可以把当前目录下node_modules子目录里边的对应模块更新至最新版本。
+- 使用npm update <package> -g可以把全局安装的对应命令行程序更新至最新版。
+- 使用npm cache clear可以清空NPM本地缓存，用于对付使用相同版本号发布新版本代码的人。
+- 使用npm unpublish <package>@<version>可以撤销发布自己发布过的某个版本代码。
+
+#淘宝 NPM 镜像
+$ npm install -g cnpm --registry=https://registry.npm.taobao.org
+这样就可以使用 cnpm 命令来安装模块了：
+$ cnpm install [name]
+
+#REPL(交互式解释器)
+- Node.js REPL(Read Eval Print Loop:交互式解释器) 表示一个电脑的环境，类似 Window 系统的终端或 Unix/Linux shell，我们可以在终端中输入命令，并接收系统的响应。
+- Node 自带了交互式解释器，可以执行以下任务：
+- 读取 - 读取用户输入，解析输入了Javascript 数据结构并存储在内存中。
+- 执行 - 执行输入的数据结构
+- 打印 - 输出结果
+- 循环 - 循环操作以上步骤直到用户两次按下 ctrl-c 按钮退出。
+- Node 的交互式解释器可以很好的调试 Javascript 代码。
+- 启动：$ node
+
+# 回调函数
+- Node.js 异步编程的直接体现就是回调。
+- 异步编程依托于回调来实现，但不能说使用了回调后程序就异步化了。
+- 回调函数在完成任务后就会被调用，Node 使用了大量的回调函数，Node 所有 API 都支持回调函数。
+- 例如，我们可以一边读取文件，一边执行其他命令，在文件读取完成后，我们将文件内容作为回调函数的参数返回。这样在执行代码时就没有阻塞或等待文件 I/O 操作。这就大大提高了 Node.js 的性能，可以处理大量的并发请求。\
+- 在 Node 应用程序中，执行异步操作的函数将回调函数作为最后一个参数， 回调函数接收错误对象作为第一个参数。
+
+#事件循环
+- Node.js 是单进程单线程应用程序，但是通过事件和回调支持并发，所以性能非常高。
+- Node.js 的每一个 API 都是异步的，并作为一个独立线程运行，使用异步函数调用，并处理并发。
+- Node.js 基本上所有的事件机制都是用设计模式中观察者模式实现。
+- Node.js 单线程类似进入一个while(true)的事件循环，直到没有事件观察者退出，每个异步事件都生成一个事件观察者，如果有事件发生就调用该回调函数.
+
+# 事件驱动程序
+- Node.js 使用事件驱动模型，当web server接收到请求，就把它关闭然后进行处理，然后去服务下一个web请求。
+- 当这个请求完成，它被放回处理队列，当到达队列开头，这个结果被返回给用户。
+- 这个模型非常高效可扩展性非常强，因为webserver一直接受请求而不等待任何读写操作。（这也被称之为非阻塞式IO或者事件驱动IO）
+- 在事件驱动模型中，会生成一个主循环来监听事件，当检测到事件时触发回调函数。
+
+# EventEmitter
+- Node.js 所有的异步 I/O 操作在完成时都会发送一个事件到事件队列。
+- Node.js里面的许多对象都会分发事件：一个net.Server对象会在每次有新连接时分发一个事件， 一个fs.readStream对象会在文件被打开的时候发出一个事件。 
+- 所有这些产生事件的对象都是 events.EventEmitter 的实例。
+- EventEmitter 类: events 模块只提供了一个对象： events.EventEmitter。
+- EventEmitter 的核心就是事件触发与事件监听器功能的封装。通过require("events");来访问该模块。
+- Node.js 有多个内置的事件，我们可以通过引入 events 模块，并通过实例化 EventEmitter 类来绑定和监听事件，如下实例：
+- var events = require('events'); // 引入 events 模块
+- var eventEmitter = new events.EventEmitter(); // 创建 eventEmitter 对象
+- eventEmitter.on('eventName', eventHandler); // 绑定事件及事件的处理程序
+- eventEmitter.emit('eventName'); // 触发事件
+
+- EventEmitter 的每个事件由一个事件名和若干个参数组成，事件名是一个字符串，通常表达一定的语义。
+- 对于每个事件，EventEmitter 支持 若干个事件监听器。
+- 当事件触发时，注册到这个事件的事件监听器被依次调用，事件参数作为回调函数参数传递。
+
+- EventEmitter 提供了多个属性，如 on 和 emit。on 函数用于绑定事件函数，emit 属性用于触发一个事件。
+- EventEmitter 的属性介绍
+1	addListener(event, listener): 为指定事件添加一个监听器到监听器数组的尾部。
+2	on(event, listener): 为指定事件注册一个监听器，接受一个字符串 event 和一个回调函数。
+3	once(event, listener): 为指定事件注册一个单次监听器，即 监听器最多只会触发一次，触发后立刻解除该监听器。
+4	removeListener(event, listener): 移除指定事件的某个监听器，监听器必须是该事件已经注册过的监听器。
+5	removeAllListeners([event]): 移除所有事件的所有监听器， 如果指定事件，则移除指定事件的所有监听器。
+6	setMaxListeners(n): 默认情况下， EventEmitters 如果你添加的监听器超过 10 个就会输出警告信息。 setMaxListeners 函数用于提高监听器的默认限制的数量。
+7	listeners(event): 返回指定事件的监听器数组。
+8	emit(event, [arg1], [arg2], [...]): 按参数的顺序执行每个监听器，如果事件有注册监听返回 true，否则返回 false。
+
+EventEmitter类方法
+- listenerCount(emitter, event): 返回指定事件的监听器数量。
+
+EventEmitter事件
+- 1	newListener: event - 字符串，事件名称; listener - 处理事件函数; 该事件在添加新监听器时被触发。
+- 2	removeListener: event - 字符串，事件名称;listener - 处理事件函数; 从指定监听器数组中删除一个监听器。需要注意的是，此操作将会改变处于被删监听器之后的那些监听器的索引。
+
+#error 事件
+- EventEmitter 定义了一个特殊的事件 error，它包含了错误的语义，
+- 我们在遇到 异常的时候通常会触发 error 事件。
+- 当 error 被触发时，EventEmitter 规定如果没有响 应的监听器，Node.js 会把它当作异常，退出程序并输出错误信息。
+- 我们一般要为会触发 error 事件的对象设置监听器，避免遇到错误后整个程序崩溃。
+
+#继承 EventEmitter
+- 大多数时候我们不会直接使用 EventEmitter，而是在对象中继承它。包括 fs、net、 http 在内的，只要是支持事件响应的核心模块都是 EventEmitter 的子类。
+- 原因有两点：首先，具有某个实体功能的对象实现事件符合语义， 事件的监听和发射应该是一个对象的方法。
+- 其次 JavaScript 的对象机制是基于原型的，支持 部分多重继承，继承 EventEmitter 不会打乱对象原有的继承关系。
+
+#Node.js Buffer(缓冲区)
+- JavaScript 语言自身只有字符串数据类型，没有二进制数据类型。
+- 但在处理像TCP流或文件流时，必须使用到二进制数据。因此在 Node.js中，定义了一个 Buffer 类，该类用来创建一个专门存放二进制数据的缓存区。
+- 在 Node.js 中，Buffer 类是随 Node 内核一起发布的核心库。Buffer 库为 Node.js 带来了一种存储原始数据的方法，可以让 Node.js 处理二进制数据，
+- 每当需要在 Node.js 中处理I/O操作中移动的数据时，就有可能使用 Buffer 库。原始数据存储在 Buffer 类的实例中。一个 Buffer 类似于一个整数数组，但它对应于 V8 堆内存之外的一块原始内存。
+
+#创建 Buffer 类
+- 方法 1: 创建长度为 10 字节的 Buffer 实例：
+var buf = new Buffer(10);
+- 方法 2: 通过给定的数组创建 Buffer 实例：
+var buf = new Buffer([10, 20, 30, 40, 50]);
+- 方法 3: 通过一个字符串来创建 Buffer 实例：
+var buf = new Buffer("www.runoob.com", "utf-8");
+utf-8 是默认的编码方式，此外它同样支持以下编码："ascii", "utf8", "utf16le", "ucs2", "base64" 和 "hex"。
+
+#写入缓冲区
+- buf.write(string[, offset[, length]][, encoding])
+- 参数:
+string - 写入缓冲区的字符串。
+offset - 缓冲区开始写入的索引值，默认为 0 。
+length - 写入的字节数，默认为 buffer.length
+encoding - 使用的编码。默认为 'utf8' 。
+- 返回值: 返回实际写入的大小。如果 buffer 空间不足， 则只会写入部分字符串。
+
+#从缓冲区读取数据
+- buf.toString([encoding[, start[, end]]])
+- 参数
+encoding - 使用的编码。默认为 'utf8' 。
+start - 指定开始读取的索引位置，默认为 0。
+end - 结束位置，默认为缓冲区的末尾。
+- 返回值: 解码缓冲区数据并使用指定的编码返回字符串。
+
+#将 Buffer 转换为 JSON 对象
+- buf.toJSON()
+- 返回值: 返回 JSON 对象。
+
+- 缓冲区合并: Buffer.concat(list[, totalLength])
+
+- 缓冲区比较: buf.compare(otherBuffer);
+
+#Node.js模块系统
+- 为了让Node.js的文件可以相互调用，Node.js提供了一个简单的模块系统。
+- 模块是Node.js 应用程序的基本组成部分，文件和模块是一一对应的。
+- 换言之，一个 Node.js 文件就是一个模块，这个文件可能是JavaScript 代码、JSON 或者编译过的C/C++ 扩展。
+- Node.js 提供了exports 和 require 两个对象，
+- 其中 exports 是模块公开的接口，
+- require 用于从外部获取一个模块的接口，即所获取模块的 exports 对象。
+- 有时候我们只是想把一个对象封装到模块中，格式如下：
+module.exports = function() {// ... }
+
+#服务端的模块放在哪里
+- 也许你已经注意到，我们已经在代码中使用了模块了。像这样：var http = require("http"); http.createServer(...);
+- Node.js中自带了一个叫做"http"的模块，我们在我们的代码中请求它并把返回值赋给一个本地变量。
+- 这把我们的本地变量变成了一个拥有所有 http 模块所提供的公共方法的对象。
+- Node.js 的 require方法中的文件查找策略如下：由于Node.js中存在4类模块（原生模块和3种文件模块），尽管require方法极其简单，但是内部的加载却是十分复杂的，其加载优先级也各自不同。
+- 从文件模块缓存中加载: 尽管原生模块与文件模块的优先级不同，但是都会优先于从文件模块的缓存中加载已经存在的模块。
+- 从原生模块加载: 原生模块的优先级仅次于文件模块缓存的优先级。require方法在解析文件名之后，优先检查模块是否在原生模块列表中。以http模块为例，尽管在目录下存在一个http/http.js/http.node/http.json文件，require("http")都不会从这些文件中加载，而是从原生模块中加载。
+- 原生模块也有一个缓存区，同样也是优先从缓存区加载。如果缓存区没有被加载过，则调用原生模块的加载方式进行加载和执行。
+- 从文件加载: 当文件模块缓存中不存在，而且不是原生模块的时候，Node.js会解析require方法传入的参数，并从文件系统中加载实际的文件，加载过程中的包装和编译细节在前一节中已经介绍过，这里我们将详细描述查找文件模块的过程，其中，也有一些细节值得知晓。
+- require方法接受以下几种参数的传递：http、fs、path等，原生模块; ./mod或../mod，相对路径的文件模块; /pathtomodule/mod，绝对路径的文件模块;mod，非原生模块的文件模块。
+
+#Node.js Stream(流)
+- Stream 是一个抽象接口，Node 中有很多对象实现了这个接口。例如，对http 服务器发起请求的request 对象就是一个 Stream，还有stdout（标准输出）。
+- Node.js，Stream 有四种流类型：Readable - 可读操作;Writable - 可写操作;Duplex - 可读可写操作;Transform - 操作被写入数据，然后读出结果。
+- 所有的 Stream 对象都是 EventEmitter 的实例。常用的事件有：
+data - 当有数据可读时触发。
+end - 没有更多的数据可读时触发。
+error - 在接收和写入过程中发生错误时触发。
+finish - 所有数据已被写入到底层系统时触发。
+- 管道流: 管道提供了一个输出流到输入流的机制。通常我们用于从一个流中获取数据并将数据传递到另外一个流中。
+- 链式流: 链式是通过连接输出流到另外一个流并创建多个对个流操作链的机制。链式流一般用于管道操作。
+
+#Node.js 路由
+- 我们要为路由提供请求的URL和其他需要的GET及POST参数，随后路由需要根据这些数据来执行相应的代码。
+- 因此，我们需要查看HTTP请求，从中提取出请求的URL以及GET/POST参数。
+- 这一功能应当属于路由还是服务器（甚至作为一个模块自身的功能）确实值得探讨，但这里暂定其为我们的HTTP服务器的功能。
+- 我们需要的所有数据都会包含在request对象中，该对象作为onRequest()回调函数的第一个参数传递。
+- 但是为了解析这些数据，我们需要额外的Node.JS模块，它们分别是url和querystring模块。
+
+                   url.parse(string).query
+                                           |
+           url.parse(string).pathname      |
+                       |                   |
+                       |                   |
+                     ------ -------------------
+http://localhost:8888/start?foo=bar&hello=world
+                                ---       -----
+                                 |          |
+                                 |          |
+              querystring(string)["foo"]    |
+                                            |
+                         querystring(string)["hello"]
+
+
+#Node.js 全局对象
+- JavaScript 中有一个特殊的对象，称为全局对象（Global Object），它及其所有属性都可以在程序的任何地方访问，即全局变量。
+- 在浏览器 JavaScript 中，通常 window 是全局对象， 而 Node.js 中的全局对象是 global，
+- 所有全局变量（除了 global 本身以外）都是 global 对象的属性。
+- 在 Node.js 我们可以直接访问到 global 的属性，而不需要在应用中包含它。
+
+
+#全局对象与全局变量
+- global 最根本的作用是作为全局变量的宿主。按照 ECMAScript 的定义，满足以下条件的变量是全局变量：在最外层定义的变量；
+全局对象的属性；隐式定义的变量（未定义直接赋值的变量）。
+- 当你定义一个全局变量时，这个变量同时也会成为全局对象的属性，反之亦然。
+- 在 Node.js 中你不可能在最外层定义变量，因为所有用户代码都是属于当前模块的，而模块本身不是最外层上下文。
+- 永远使用 var 定义变量以避免引入全局变量，因为全局变量会污染命名空间，提高代码的耦合风险。
+
+1. __filename: 表示当前正在执行的脚本的文件名。它将输出文件所在位置的绝对路径，且和命令行参数所指定的文件名不一定相同。 如果在模块中，返回的值是模块文件的路径。
+
+2. __dirname 表示当前执行脚本所在的目录。
+
+3. setTimeout(cb, ms) 全局函数在指定的毫秒(ms)数后执行指定函数(cb)。：setTimeout() 只执行一次指定函数。
+返回一个代表定时器的句柄值。
+
+4. clearTimeout( t ) 全局函数用于停止一个之前通过 setTimeout() 创建的定时器。 参数 t 是通过 setTimeout() 函数创建的定时器。
+
+5. setInterval(cb, ms) 全局函数在指定的毫秒(ms)数后执行指定函数(cb)。返回一个代表定时器的句柄值。可以使用 clearInterval(t) 函数来清除定时器。setInterval() 方法会不停地调用函数，直到 clearInterval() 被调用或窗口被关闭。
+
+6. console 用于提供控制台标准输出，它是由 Internet Explorer 的 JScript 引擎提供的调试工具，后来逐渐成为浏览器的事实标准。
+Node.js 沿用了这个标准，提供与习惯行为一致的 console 对象，用于向标准输出流（stdout）或标准错误流（stderr）输出字符。
+
+- console.log()：向标准输出流打印字符并以换行符结束。
+- console.log 接受若干个参数，如果只有一个参数，则输出这个参数的字符串形式。如果有多个参数，则 以类似于C 语言 printf() 命令的格式输出。
+
+7. process 是一个全局变量，即 global 对象的属性。
+- 它用于描述当前Node.js 进程状态的对象，提供了一个与操作系统的简单接口。通常在你写本地命令行程序的时候，少不了要 和它打交道。下面将会介绍 process 对象的一些最常用的成员方法。
+
+1	exit: 当进程准备退出时触发。
+2	beforeExit: 当 node 清空事件循环，并且没有其他安排时触发这个事件。通常来说，当没有进程安排时 node 退出，但是 'beforeExit' 的监听器可以异步调用，这样 node 就会继续执行。
+3	uncaughtException: 
+当一个异常冒泡回到事件循环，触发这个事件。如果给异常添加了监视器，默认的操作（打印堆栈跟踪信息并退出）就不会发生。
+4	Signal 事件: 当进程接收到信号时就触发。信号列表详见标准的 POSIX 信号名，如 SIGINT、SIGUSR1 等。
+
+Process 提供了很多有用的属性，便于我们更好的控制系统的交互：
+1	stdout: 标准输出流。
+2	stderr: 标准错误流。
+3	stdin: 标准输入流。
+4	argv: 属性返回一个数组，由命令行执行脚本时的各个参数组成。它的第一个成员总是node，第二个成员是脚本文件名，其余成员是脚本文件的参数。
+5	execPath: 返回执行当前脚本的 Node 二进制文件的绝对路径。
+6	execArgv: 返回一个数组，成员是命令行下执行脚本时，在Node可执行文件与脚本文件之间的命令行参数。
+7	env: 返回一个对象，成员为当前 shell 的环境变量
+8	exitCode: 进程退出时的代码，如果进程优通过 process.exit() 退出，不需要指定退出码。
+9	version: Node 的版本，比如v0.10.18。
+10	versions: 一个属性，包含了 node 的版本和依赖.
+11	config: 一个包含用来编译当前 node 执行文件的 javascript 配置选项的对象。它与运行 ./configure 脚本生成的 "config.gypi" 文件相同。
+12	pid: 当前进程的进程号。
+13	title: 进程名，默认值为"node"，可以自定义该值。
+14	arch: 当前 CPU 的架构：'arm'、'ia32' 或者 'x64'。
+15	platform: 运行程序所在的平台系统 'darwin', 'freebsd', 'linux', 'sunos' 或 'win32'
+16	mainModule: require.main的备选方法。不同点，如果主模块在运行时改变，require.main可能会继续返回老的模块。可以认为，这两者引用了同一个模块。
+
+Process 提供了很多有用的方法，便于我们更好的控制系统的交互：
+1	abort(): 这将导致 node 触发 abort 事件。会让 node 退出并生成一个核心文件。
+2	chdir(directory): 改变当前工作进程的目录，如果操作失败抛出异常。
+3	cwd(): 返回当前进程的工作目录
+4	exit([code]): 使用指定的 code 结束进程。如果忽略，将会使用 code 0。
+5	getgid(): 获取进程的群组标识（参见 getgid(2)）。获取到得时群组的数字 id，而不是名字。
+注意：这个函数仅在 POSIX 平台上可用(例如，非Windows 和 Android)。
+6	setgid(id): 设置进程的群组标识（参见 setgid(2)）。可以接收数字 ID 或者群组名。如果指定了群组名，会阻塞等待解析为数字 ID 。
+注意：这个函数仅在 POSIX 平台上可用(例如，非Windows 和 Android)。
+7	getuid(): 获取进程的用户标识(参见 getuid(2))。这是数字的用户 id，不是用户名。
+注意：这个函数仅在 POSIX 平台上可用(例如，非Windows 和 Android)。
+8	setuid(id): 设置进程的用户标识（参见setuid(2)）。接收数字 ID或字符串名字。果指定了群组名，会阻塞等待解析为数字 ID 。
+注意：这个函数仅在 POSIX 平台上可用(例如，非Windows 和 Android)。
+9	getgroups(): 返回进程的群组 iD 数组。POSIX 系统没有保证一定有，但是 node.js 保证有。
+注意：这个函数仅在 POSIX 平台上可用(例如，非Windows 和 Android)。
+10	setgroups(groups): 设置进程的群组 ID。这是授权操作，所有你需要有 root 权限，或者有 CAP_SETGID 能力。
+注意：这个函数仅在 POSIX 平台上可用(例如，非Windows 和 Android)。
+11	initgroups(user, extra_group): 读取 /etc/group ，并初始化群组访问列表，使用成员所在的所有群组。这是授权操作，所有你需要有 root 权限，或者有 CAP_SETGID 能力。
+注意：这个函数仅在 POSIX 平台上可用(例如，非Windows 和 Android)。
+12	kill(pid[, signal]): 发送信号给进程. pid 是进程id，并且 signal 是发送的信号的字符串描述。信号名是字符串，比如 'SIGINT' 或 'SIGHUP'。如果忽略，信号会是 'SIGTERM'。
+13	memoryUsage(): 返回一个对象，描述了 Node 进程所用的内存状况，单位为字节。
+14	nextTick(callback): 一旦当前事件循环结束，调用回到函数。
+15	umask([mask]): 设置或读取进程文件的掩码。子进程从父进程继承掩码。如果mask 参数有效，返回旧的掩码。否则，返回当前掩码。
+16	uptime(): 返回 Node 已经运行的秒数。
+17	hrtime(): 返回当前进程的高分辨时间，形式为 [seconds, nanoseconds]数组。它是相对于过去的任意事件。该值与日期无关，因此不受时钟漂移的影响。主要用途是可以通过精确的时间间隔，来衡量程序的性能。
+你可以将之前的结果传递给当前的 process.hrtime() ，会返回两者间的时间差，用来基准和测量时间间隔。
+
+#Node.js 常用工具
+- util 是一个Node.js 核心模块，提供常用函数的集合，用于弥补核心JavaScript的功能过于精简的不足。
+- util.inherits(constructor, superConstructor)是一个实现对象间原型继承 的函数。JavaScript 的面向对象特性是基于原型的，与常见的基于类的不同。JavaScript 没有提供对象继承的语言级别特性，而是通过原型复制来实现的。
+- Sub 仅仅继承了Base 在原型中定义的函数，而构造函数内部创造的 base 属 性和 sayHello 函数都没有被 Sub 继承。
+同时，在原型中定义的属性不会被console.log 作 为对象的属性输出。
+
+- util.inspect(object,[showHidden],[depth],[colors])是一个将任意对象转换 为字符串的方法，通常用于调试和错误输出。
+它至少接受一个参数 object，即要转换的对象。
+showHidden 是一个可选参数，如果值为 true，将会输出更多隐藏信息。
+depth 表示最大递归的层数，如果对象很复杂，你可以指定层数以控制输出信息的多 少。如果不指定depth，默认会递归2层，指定为 null 表示将不限递归层数完整遍历对象。 
+如果color 值为 true，输出格式将会以ANSI 颜色编码，通常用于在终端显示更漂亮 的效果。
+特别要指出的是，util.inspect 并不会简单地直接把对象转换为字符串，即使该对象定义了toString 方法也不会调用。
+
+- util.isArray(object): 如果给定的参数 "object" 是一个数组返回true，否则返回false。
+
+- util.isRegExp(object): 如果给定的参数 "object" 是一个正则表达式返回true，否则返回false。
+
+- util.isDate(object): 如果给定的参数 "object" 是一个日期返回true，否则返回false。
+
+- util.isError(object): 如果给定的参数 "object" 是一个错误对象返回true，否则返回false。
+
+#更多详情可以访问 http://nodejs.org/api/util.html 了解详细内容。
+
+#Node.js 文件系统 
+- Node.js 提供一组类似 UNIX（POSIX）标准的文件操作API。 
+- Node.js 文件系统（fs 模块）模块中的方法均有异步和同步版本，例如读取文件内容的函数有异步的 fs.readFile() 和同步的 fs.readFileSync()。
+- 异步的方法函数最后一个参数为回调函数，回调函数的第一个参数包含了错误信息(error)。
+- 建议大家是用异步方法，比起同步，异步方法性能更高，速度更快，而且没有阻塞。
+
+#打开文件
+- 以下为在异步模式下打开文件的语法格式：fs.open(path, flags[, mode], callback)
+
+#获取文件信息
+- 以下为通过异步模式获取文件信息的语法格式：fs.stat(path, callback)
+
+#写入文件
+- 以下为异步模式下写入文件的语法格式：fs.writeFile(filename, data[, options], callback)
+
+#关闭文件
+- 以下为异步模式下关闭文件的语法格式：fs.close(fd, callback)
+
+#截取文件
+- 以下为异步模式下截取文件的语法格式：fs.ftruncate(fd, len, callback)
+
+#删除文件
+- 以下为删除文件的语法格式：fs.unlink(path, callback)
+
+#创建目录
+- 以下为创建目录的语法格式：fs.mkdir(path[, mode], callback)
+
+#读取目录
+- 以下为读取目录的语法格式：fs.readdir(path, callback)
+
+#删除目录
+- 以下为删除目录的语法格式：fs.rmdir(path, callback)
+
+#Node.js GET/POST请求
+- 在很多场景中，我们的服务器都需要跟用户的浏览器打交道，如表单提交。
+- 表单提交到服务器一般都使用GET/POST请求。
+
+#获取GET请求内容
+- 由于GET请求直接被嵌入在URL路径中，URL是完整的请求路径，包括了?后面的部分，
+- 因此你可以手动解析后面的内容作为GET请求的参数。node.js中url模块中的parse函数提供了这个功能
+
+#获取POST请求内容
+- POST请求的内容全部的都在请求体中，http.ServerRequest并没有一个属性内容为请求体，原因是等待请求体传输可能是一件耗时的工作。
+- 比如上传文件，而很多时候我们可能并不需要理会请求体的内容，恶意的POST请求会大大消耗服务器的资源，
+- 所以node.js默认是不会解析请求体的，当你需要的时候，需要手动来做。
+
+#Node.js 工具模块
+- 1	OS 模块：提供基本的系统操作函数。
+- 2	Path 模块：提供了处理和转换文件路径的工具。
+- 3	Net 模块：用于底层的网络通信。提供了服务端和客户端的的操作。
+- 4	DNS 模块：用于解析域名。
+- 5	Domain 模块：简化异步代码的异常处理，可以捕捉处理try catch无法捕捉的。
+
+#OS 模块：
+- var os = require("os")
+方法
+1	os.tmpdir()：返回操作系统的默认临时文件夹。
+2	os.endianness()：返回 CPU 的字节序，可能的是 "BE" 或 "LE"。
+3	os.hostname()：返回操作系统的主机名。
+4	os.type()：返回操作系统名
+5	os.platform()：返回操作系统名
+6	os.arch()：返回操作系统 CPU 架构，可能的值有 "x64"、"arm" 和 "ia32"。
+7	os.release()：返回操作系统的发行版本。
+8	os.uptime()：返回操作系统运行的时间，以秒为单位。
+9	os.loadavg()：返回一个包含 1、5、15 分钟平均负载的数组。
+10	os.totalmem()：返回系统内存总量，单位为字节。
+11	os.freemem()：返回操作系统空闲内存量，单位是字节。
+12	os.cpus()：返回一个对象数组，包含所安装的每个 CPU/内核的信息：型号、速度（单位 MHz）、时间（一个包含 user、nice、sys、idle 和 irq 所使用 CPU/内核毫秒数的对象）。
+13	os.networkInterfaces()：获得网络接口列表。
+属性
+1	os.EOL：定义了操作系统的行尾符的常量。
+
+#path
+var path = require("path")
+方法：
+- 1	path.normalize(p)：规范化路径，注意'..' 和 '.'。
+- 2	path.join([path1][, path2][, ...])：用于连接路径。该方法的主要用途在于，会正确使用当前系统的路径分隔符，Unix系统是"/"，Windows系统是"\"。
+3	path.resolve([from ...], to)： 将 to 参数解析为绝对路径。
+4	path.isAbsolute(path)： 判断参数 path 是否是绝对路径。
+5	path.relative(from, to)：用于将相对路径转为绝对路径。
+6	path.dirname(p)：返回路径中代表文件夹的部分，同 Unix 的dirname 命令类似。
+7	path.basename(p[, ext])：返回路径中的最后一部分。同 Unix 命令 bashname 类似。
+8	path.extname(p)： 返回路径中文件的后缀名，即路径中最后一个'.'之后的部分。如果一个路径中并不包含'.'或该路径只包含一个'.' 且这个'.'为路径的第一个字符，则此命令返回空字符串。
+9	path.parse(pathString)：返回路径字符串的对象。
+10	path.format(pathObject)：从对象中返回路径字符串，和 path.parse 相反。
+属性
+1	path.sep：平台的文件路径分隔符，'\\' 或 '/'。
+2	path.delimiter：平台的分隔符, ; or ':'.
+3	path.posix：提供上述 path 的方法，不过总是以 posix 兼容的方式交互。
+4	path.win32：提供上述 path 的方法，不过总是以 win32 兼容的方式交互。
+
+#Net 模块
+- Net 模块提供了一些用于底层的网络通信的小工具，包含了创建服务器/客户端的方法，
+- 我们可以通过以下方式引入该模块：var net = require("net")
+
+方法
+- 1	net.createServer([options][, connectionListener]): 创建一个 TCP 服务器。参数 connectionListener 自动给 'connection' 事件创建监听器。
+- 2	net.connect(options[, connectionListener]): 返回一个新的 'net.Socket'，并连接到指定的地址和端口。
+当 socket 建立的时候，将会触发 'connect' 事件。
+- 3	net.createConnection(options[, connectionListener]): 创建一个到端口 port 和 主机 host的 TCP 连接。 host 默认为 'localhost'。
+- 4	net.connect(port[, host][, connectListener]): 创建一个端口为 port 和主机为 host的 TCP 连接 。host 默认为 'localhost'。参数 connectListener 将会作为监听器添加到 'connect' 事件。返回 'net.Socket'。
+- 5	net.createConnection(port[, host][, connectListener]): 创建一个端口为 port 和主机为 host的 TCP 连接 。host 默认为 'localhost'。参数 connectListener 将会作为监听器添加到 'connect' 事件。返回 'net.Socket'。
+- 6	net.connect(path[, connectListener]): 创建连接到 path 的 unix socket 。参数 connectListener 将会作为监听器添加到 'connect' 事件上。返回 'net.Socket'。
+- 7	net.createConnection(path[, connectListener]): 创建连接到 path 的 unix socket 。参数 connectListener 将会作为监听器添加到 'connect' 事件。返回 'net.Socket'。
+- 8	net.isIP(input): 检测输入的是否为 IP 地址。 IPV4 返回 4， IPV6 返回 6，其他情况返回 0。
+- 9	net.isIPv4(input): 如果输入的地址为 IPV4， 返回 true，否则返回 false。
+- 10 net.isIPv6(input): 如果输入的地址为 IPV6， 返回 true，否则返回 false。
+
+# net.Server
+方法：
+- net.Server通常用于创建一个 TCP 或本地服务器。
+- 1	server.listen(port[, host][, backlog][, callback]): 监听指定端口 port 和 主机 host ac连接。 默认情况下 host 接受任何 IPv4 地址(INADDR_ANY)的直接连接。端口 port 为 0 时，则会分配一个随机端口。
+- 2	server.listen(path[, callback]): 通过指定 path 的连接，启动一个本地 socket 服务器。
+- 3	server.listen(handle[, callback]): 通过指定句柄连接。
+- 4	server.listen(options[, callback]): options 的属性：端口 port, 主机 host, 和 backlog, 以及可选参数 callback 函数, 他们在一起调用server.listen(port, [host], [backlog], [callback])。还有，参数 path 可以用来指定 UNIX socket。
+- 5	server.close([callback]): 服务器停止接收新的连接，保持现有连接。这是异步函数，当所有连接结束的时候服务器会关闭，并会触发 'close' 事件。
+- 6	server.address(): 操作系统返回绑定的地址，协议族名和服务器端口。
+- 7	server.unref(): 如果这是事件系统中唯一一个活动的服务器，调用 unref 将允许程序退出。
+- 8	server.ref(): 与 unref 相反，如果这是唯一的服务器，在之前被 unref 了的服务器上调用 ref 将不会让程序退出（默认行为）。如果服务器已经被 ref，则再次调用 ref 并不会产生影响。
+- 9	server.getConnections(callback): 异步获取服务器当前活跃连接的数量。当 socket 发送给子进程后才有效；回调函数有 2 个参数 err 和 count。
+
+事件
+- 1	listening：当服务器调用 server.listen 绑定后会触发。
+- 2	connection：当新连接创建后会被触发。socket 是 net.Socket实例。
+- 3	close：服务器关闭时会触发。注意，如果存在连接，这个事件不会被触发直到所有的连接关闭。
+- 4	error：发生错误时触发。'close' 事件将被下列事件直接调用。
+
+#net.Socket
+- net.Socket 对象是 TCP 或 UNIX Socket 的抽象。net.Socket 实例实现了一个双工流接口。 他们可以在用户创建客户端(使用 connect())时使用, 或者由 Node 创建它们，并通过 connection 服务器事件传递给用户。
+- 事件
+- 1	lookup: 在解析域名后，但在连接前，触发这个事件。对 UNIX sokcet 不适用。
+- 2	connect: 成功建立 socket 连接时触发。
+- 3	data: 当接收到数据时触发。
+- 4	end: 当 socket 另一端发送 FIN 包时，触发该事件。
+- 5	timeout: 当 socket 空闲超时时触发，仅是表明 socket 已经空闲。用户必须手动关闭连接。
+- 6	drain: 当写缓存为空得时候触发。可用来控制上传。
+- 7	error: 错误发生时触发。
+- 8	close: 当 socket 完全关闭时触发。参数 had_error 是布尔值，它表示是否因为传输错误导致 socket 关闭。
+属性
+- 1	socket.bufferSize: 该属性显示了要写入缓冲区的字节数。
+- 2	socket.remoteAddress: 远程的 IP 地址字符串，例如：'74.125.127.100' or '2001:4860:a005::68'。
+- 3	socket.remoteFamily: 远程IP协议族字符串，比如 'IPv4' or 'IPv6'。
+- 4	socket.remotePort: 远程端口，数字表示，例如：80 or 21。
+- 5	socket.localAddress: 网络连接绑定的本地接口 远程客户端正在连接的本地 IP 地址，字符串表示。例如，如果你在监听'0.0.0.0'而客户端连接在'192.168.1.1'，这个值就会是 '192.168.1.1'。
+- 6	socket.localPort: 本地端口地址，数字表示。例如：80 or 21。
+- 7	socket.bytesRead: 接收到得字节数。
+- 8	socket.bytesWritten: 发送的字节数。
+方法
+- 1	new net.Socket([options]): 构造一个新的 socket 对象。
+- 2	socket.connect(port[, host][, connectListener]): 指定端口 port 和 主机 host，创建 socket 连接 。参数 host 默认为 localhost。通常情况不需要使用 net.createConnection 打开 socket。只有你实现了自己的 socket 时才会用到。
+- 3	socket.connect(path[, connectListener]): 打开指定路径的 unix socket。通常情况不需要使用 net.createConnection 打开 socket。只有你实现了自己的 socket 时才会用到。
+- 4	socket.setEncoding([encoding]): 设置编码
+- 5	socket.write(data[, encoding][, callback]): 在 socket 上发送数据。第二个参数指定了字符串的编码，默认是 UTF8 编码。
+- 6	socket.end([data][, encoding]): 半关闭 socket。例如，它发送一个 FIN 包。可能服务器仍在发送数据。
+- 7	socket.destroy(): 确保没有 I/O 活动在这个套接字上。只有在错误发生情况下才需要。（处理错误等等）。
+- 8	socket.pause(): 暂停读取数据。就是说，不会再触发 data 事件。对于控制上传非常有用。
+- 9	socket.resume(): 调用 pause() 后想恢复读取数据。
+- 10 socket.setTimeout(timeout[, callback]): socket 闲置时间超过 timeout 毫秒后 ，将 socket 设置为超时。
+- 11 socket.setNoDelay([noDelay]): 禁用纳格（Nagle）算法。默认情况下 TCP 连接使用纳格算法，在发送前他们会缓冲数据。将 noDelay 设置为 true 将会在调用 socket.write() 时立即发送数据。noDelay 默认值为 true。
+- 12	socket.setKeepAlive([enable][, initialDelay]): 禁用/启用长连接功能，并在发送第一个在闲置 socket 上的长连接 probe 之前，可选地设定初始延时。默认为 false。 设定 initialDelay（毫秒），来设定收到的最后一个数据包和第一个长连接probe之间的延时。将 initialDelay 设为0，将会保留默认（或者之前）的值。默认值为0.
+- 13	socket.address(): 操作系统返回绑定的地址，协议族名和服务器端口。返回的对象有 3 个属性，比如{ port: 12346, family: 'IPv4', address: '127.0.0.1' }。
+- 14	socket.unref(): 如果这是事件系统中唯一一个活动的服务器，调用 unref 将允许程序退出。如果服务器已被 unref，则再次调用 unref 并不会产生影响。
+15	socket.ref(): 与 unref 相反，如果这是唯一的服务器，在之前被 unref 了的服务器上调用 ref 将不会让程序退出（默认行为）。如果服务器已经被 ref，则再次调用 ref 并不会产生影响。
+
+#DNS 模块
+- Node.js DNS 模块用于解析域名: var dns = require("dns")
+
+#Domain(域) 
+- 简化异步代码的异常处理，可以捕捉处理try catch无法捕捉的异常：var domain = require("domain")
+- 把处理多个不同的IO的操作作为一个组。注册事件和回调到domain，当发生一个错误事件或抛出一个错误时，domain对象会被通知，不会丢失上下文环境，也不导致程序错误立即推出，与process.on('uncaughtException')不同。
+- Domain 模块可分为隐式绑定和显式绑定：
+- 隐式绑定: 把在domain上下文中定义的变量，自动绑定到domain对象
+- 显式绑定: 把不是在domain上下文中定义的变量，以代码的方式绑定到domain对象
+
+#Express 框架
+- Express 是一个简洁而灵活的 node.js Web应用框架, 提供了一系列强大特性帮助你创建各种 Web 应用，和丰富的 HTTP 工具。
+- 使用 Express 可以快速地搭建一个完整功能的网站。
+- Express 框架核心特性：
+可以设置中间件来响应 HTTP 请求。
+定义了路由表用于执行不同的 HTTP 请求动作。
+可以通过向模板传递参数来动态渲染 HTML 页面。
+
+- 以下几个重要的模块是需要与 express 框架一起安装的：
+body-parser - node.js 中间件，用于处理 JSON, Raw, Text 和 URL 编码的数据。
+cookie-parser - 这就是一个解析Cookie的工具。通过req.cookies可以取到传过来的cookie，并把它们转成对象。
+multer - node.js 中间件，用于处理 enctype="multipart/form-data"（设置表单的MIME编码）的表单数据。
+
+- 静态文件
+Express 提供了内置的中间件 express.static 来设置静态文件如：图片， CSS, JavaScript 等。
+你可以使用 express.static 中间件来设置静态文件路径。例如，如果你将图片， CSS, JavaScript 文件放在 public 目录下，你可以这么写：
+app.use(express.static('public'));
+我们可以到 public/images 目录下放些图片,如下所示：
+node_modules
+server.js
+public/
+public/images
+public/images/logo.png
+
+- 文件上传: 使用 POST 方法，表单 enctype 属性设置为 multipart/form-data。
+
+#RESTful API
+- REST即表述性状态传递（英文：Representational State Transfer，简称REST）是Roy Fielding博士在2000年他的博士论文中提出来的一种软件架构风格。
+- 表述性状态转移是一组架构约束条件和原则。满足这些约束条件和原则的应用程序或设计就是RESTful。需要注意的是，REST是设计风格而不是标准。REST通常基于使用HTTP，URI，和XML（标准通用标记语言下的一个子集）以及HTML（标准通用标记语言下的一个应用）这些现有的广泛流行的协议和标准。
+- REST 通常使用 JSON 数据格式。
+- HTTP 方法:
+GET - 用于获取数据。
+PUT - 用于添加数据。
+DELETE - 用于删除数据。
+POST - 用于更新或添加数据。
+
+#Node.js 多进程
+- 我们都知道 Node.js 是以单线程的模式运行的，但它使用的是事件驱动来处理并发，这样有助于我们在多核 cpu 的系统上创建多个子进程，从而提高性能。
+- 每个子进程总是带有三个流对象：child.stdin, child.stdout 和child.stderr。他们可能会共享父进程的 stdio 流，或者也可以是独立的被导流的流对象。
+- Node 提供了 child_process 模块来创建子进程，方法有：
+exec - child_process.exec 使用子进程执行命令，缓存子进程的输出，并将子进程的输出以回调函数参数的形式返回。
+spawn - child_process.spawn 使用指定的命令行参数创建新进程。
+fork - child_process.fork 是 spawn()的特殊形式，用于在子进程中运行的模块，如 fork('./son.js') 相当于 spawn('node', ['./son.js']) 。与spawn方法不同的是，fork会在父进程与子进程之间，建立一个通信管道，用于进程之间的通信。
